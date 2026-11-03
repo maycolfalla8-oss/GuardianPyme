@@ -1,0 +1,172 @@
+<title>Guardián Pyme</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concepto: panel de control sobrio de una pyme; el semáforo de riesgo es lo único que usa color fuerte. */
+:root{--bg:#f3f6f7;--surface:#ffffff;--ink:#12303a;--muted:#5b727a;--line:#d5e0e3;--brand:#0f5c6e;--brand-ink:#ffffff;
+--ok:#1e8e5a;--warn:#c47f00;--bad:#c63d2f;--okbg:#e2f4ea;--warnbg:#fbefd2;--badbg:#fbe3df;
+--display:"Bricolage Grotesque","Trebuchet MS",sans-serif;--body:"IBM Plex Sans","Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1d22;--surface:#152a31;--ink:#e4f0f2;--muted:#9bb4ba;--line:#27424b;--brand:#4fb3c8;--brand-ink:#08222a;
+--ok:#4cc58a;--warn:#e8b04a;--bad:#ee7a6c;--okbg:#18392b;--warnbg:#3b3017;--badbg:#40201c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1d22;--surface:#152a31;--ink:#e4f0f2;--muted:#9bb4ba;--line:#27424b;--brand:#4fb3c8;--brand-ink:#08222a;
+--ok:#4cc58a;--warn:#e8b04a;--bad:#ee7a6c;--okbg:#18392b;--warnbg:#3b3017;--badbg:#40201c;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;align-items:baseline}
+h1{font-family:var(--display);font-size:1.7rem;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0}
+.badge{font-size:.8rem;color:var(--muted);border:1px solid var(--line);padding:3px 10px;border-radius:99px}
+nav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav button{font:inherit;font-weight:500;background:transparent;color:var(--muted);border:1px solid transparent;padding:8px 14px;border-radius:8px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+nav button:focus-visible,.chk input:focus-visible,.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+section[hidden]{display:none}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+@media(max-width:560px){.hero{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.light{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:2.4rem;color:#fff;transition:background .3s}
+.light small{display:block;font-size:.8rem;font-weight:600;font-family:var(--body);opacity:.95}
+.status-ok{background:var(--ok)}.status-warn{background:var(--warn)}.status-bad{background:var(--bad)}
+h2{font-family:var(--display);font-size:1.25rem;margin:0 0 6px}
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.area{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:6px}
+.area b{font-weight:600}
+.bar{height:8px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);transition:width .3s}
+.pill{font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;justify-self:start}
+.pill.ok{background:var(--okbg);color:var(--ok)}.pill.warn{background:var(--warnbg);color:var(--warn)}.pill.bad{background:var(--badbg);color:var(--bad)}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.chk:first-of-type{border-top:0}
+.chk input{width:22px;height:22px;margin-top:2px;accent-color:var(--brand);flex:none}
+.chk span{display:grid;gap:2px;min-width:0}.chk em{font-style:normal;color:var(--muted);font-size:.9rem}
+.week{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 2px}
+.mail{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg);display:grid;gap:6px}
+.mail .meta{font-size:.9rem;color:var(--muted)}
+.opts{display:grid;gap:8px;margin-top:12px}
+.opt{font:inherit;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.opt:hover{border-color:var(--brand)}
+.fb{margin-top:12px;padding:12px 14px;border-radius:8px}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.btn{font:inherit;font-weight:600;background:var(--brand);color:var(--brand-ink);border:0;padding:9px 16px;border-radius:8px;cursor:pointer;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500;font-size:.82rem}
+.scroll{overflow-x:auto}
+.note{color:var(--muted);font-size:.85rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div><h1>Guardián Pyme</h1><p class="sub">Tu CISO compartido · Distribuidora Andina Ltda. (ejemplo)</p></div>
+  <span class="badge">Prototipo · datos de ejemplo</span>
+</header>
+
+<nav role="tablist" aria-label="Secciones">
+  <button role="tab" aria-selected="true" data-tab="panel">Mi semáforo</button>
+  <button role="tab" aria-selected="false" data-tab="plan">Plan de 90 días</button>
+  <button role="tab" aria-selected="false" data-tab="sim">Simulacro de phishing</button>
+  <button role="tab" aria-selected="false" data-tab="informe">Informe mensual</button>
+</nav>
+
+<section id="panel">
+  <div class="panel hero">
+    <div id="light" class="light status-bad" role="img" aria-label="Estado de riesgo"><div><span id="pct">0%</span><small id="lbl">Riesgo alto</small></div></div>
+    <div>
+      <h2 id="headline">Tu empresa está expuesta</h2>
+      <p class="sub" id="advice">Completa los controles del plan para pasar de rojo a verde.</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <h2>Estado por área</h2>
+    <div class="areas" id="areas"></div>
+  </div>
+</section>
+
+<section id="plan" hidden>
+  <div class="panel">
+    <h2>Controles prioritarios</h2>
+    <p class="sub">Marca cada control cuando esté listo. El semáforo se actualiza solo.</p>
+    <div id="list"></div>
+  </div>
+</section>
+
+<section id="sim" hidden>
+  <div class="panel">
+    <h2>Simulacro: ¿qué haces con este correo?</h2>
+    <p class="sub">Un ejercicio mensual de 2 minutos para el equipo.</p>
+    <div class="mail">
+      <div class="meta"><b>De:</b> soporte@bancolombla-seguro.com &nbsp;·&nbsp; <b>Asunto:</b> Cuenta bloqueada, acción inmediata</div>
+      <div>Estimado cliente: detectamos un acceso inusual. Para evitar el bloqueo definitivo de su cuenta empresarial, ingrese hoy mismo en <u>http://bancolombla-seguro.com/verificar</u> y confirme su usuario y clave.</div>
+    </div>
+    <div class="opts" id="opts">
+      <button class="opt" data-ok="0">Hago clic en el enlace y entro mis datos para no perder la cuenta</button>
+      <button class="opt" data-ok="1">No hago clic, lo reporto al responsable de seguridad y borro el correo</button>
+      <button class="opt" data-ok="0">Se lo reenvío a un compañero para que lo revise</button>
+    </div>
+    <div id="fb" hidden></div>
+  </div>
+</section>
+
+<section id="informe" hidden>
+  <div class="panel">
+    <h2>Informe para gerencia · octubre</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Indicador</th><th>Septiembre</th><th>Octubre</th></tr></thead>
+      <tbody id="rep"></tbody>
+    </table></div>
+    <p class="note">Valores de ejemplo para el prototipo; en el servicio real salen del monitoreo de la pyme.</p>
+  </div>
+</section>
+</div>
+
+<script>
+const controls=[
+ {id:"mfa",area:"Accesos",w:"Semana 1",t:"Activar verificación en dos pasos",d:"Correo, banca y aplicaciones principales."},
+ {id:"pass",area:"Accesos",w:"Semana 1",t:"Dejar de compartir claves",d:"Una cuenta por persona y gestor de contraseñas."},
+ {id:"bak",area:"Datos",w:"Semana 2",t:"Copias de seguridad automáticas y probadas",d:"Una copia fuera de la oficina y una restauración de prueba."},
+ {id:"upd",area:"Equipos",w:"Semana 3",t:"Actualizar equipos y router",d:"Parches al día y contraseña del router cambiada."},
+ {id:"net",area:"Red",w:"Semana 4",t:"Separar la red de visitantes",d:"El Wi-Fi de invitados no ve los equipos de la empresa."},
+ {id:"trn",area:"Personas",w:"Semana 6",t:"Primera capacitación y simulacro de phishing",d:"Todo el personal, 30 minutos."},
+ {id:"inc",area:"Personas",w:"Semana 8",t:"Hoja de respuesta ante incidentes",d:"Quién llama a quién en los primeros 15 minutos."},
+ {id:"mon",area:"Red",w:"Semana 10",t:"Monitoreo y alertas activas",d:"Aviso automático ante accesos sospechosos."}
+];
+const areas=["Accesos","Datos","Equipos","Red","Personas"];
+let state={};try{state=JSON.parse(localStorage.getItem("gp")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("gp",JSON.stringify(state))}catch(e){}}
+const $=s=>document.querySelector(s);
+function render(){
+  const list=$("#list");list.innerHTML="";let last="";
+  controls.forEach(c=>{
+    if(c.w!==last){const h=document.createElement("div");h.className="week";h.textContent=c.w;list.appendChild(h);last=c.w}
+    const l=document.createElement("label");l.className="chk";
+    l.innerHTML=`<input type="checkbox" id="c-${c.id}" ${state[c.id]?"checked":""}><span><b>${c.t}</b><em>${c.d}</em></span>`;
+    l.querySelector("input").addEventListener("change",e=>{state[c.id]=e.target.checked;save();update()});
+    list.appendChild(l);
+  });
+  update();
+}
+function lvl(p){return p>=75?["ok","Riesgo bajo"]:p>=40?["warn","Riesgo medio"]:["bad","Riesgo alto"]}
+function update(){
+  const done=controls.filter(c=>state[c.id]).length,p=Math.round(done/controls.length*100),[k,txt]=lvl(p);
+  $("#pct").textContent=p+"%";$("#lbl").textContent=txt;$("#light").className="light status-"+k;
+  $("#headline").textContent=k==="ok"?"Tu empresa está bien protegida":k==="warn"?"Vas por buen camino":"Tu empresa está expuesta";
+  $("#advice").textContent=k==="ok"?"Mantén la capacitación mensual y revisa el informe cada mes.":done+" de "+controls.length+" controles listos. Sigue con el plan de 90 días.";
+  $("#areas").innerHTML=areas.map(a=>{
+    const cs=controls.filter(c=>c.area===a),d=cs.filter(c=>state[c.id]).length,ap=Math.round(d/cs.length*100),[ak,at]=lvl(ap);
+    return `<div class="area"><b>${a}</b><div class="bar"><i style="width:${ap}%"></i></div><span class="pill ${ak}">${at} · ${d}/${cs.length}</span></div>`}).join("");
+  $("#rep").innerHTML=[["Controles completados",Math.max(0,done-2)+" de 8",done+" de 8"],["Personas capacitadas","6 de 22",(state.trn?22:6)+" de 22"],["Intentos de acceso bloqueados","14",state.mon?"31":"0 (sin monitoreo)"],["Copia de seguridad probada",state.bak?"Sí":"No",state.bak?"Sí":"No"]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><b>${r[2]}</b></td></tr>`).join("");
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["panel","plan","sim","informe"].forEach(id=>$("#"+id).hidden=id!==b.dataset.tab);
+}));
+document.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{
+  const ok=o.dataset.ok==="1",fb=$("#fb");fb.hidden=false;fb.className="fb "+(ok?"ok":"bad");
+  fb.innerHTML=ok?"<b>Correcto.</b> El dominio imita a un banco (“bancolombla”), usa http sin candado, pide claves y mete urgencia. Reportarlo protege a todo el equipo."
+  :"<b>Ese es el riesgo.</b> Fíjate en el dominio falso, el enlace sin candado, la urgencia y que piden tu clave. Lo seguro es no hacer clic y reportarlo.";
+}));
+render();
+</script>
